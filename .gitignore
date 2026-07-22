@@ -1,0 +1,21 @@
+# 原始资料文件（太大，不上传）
+*.docx
+*.doc
+*.xlsx
+*.pdf
+*.rar
+extracted/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+
+# IDE
+.vscode/
+.idea/
+
+# 临时文件
+*.tmp
+*.log

@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重邮转专业知识库 — CQUPT Major Transfer Knowledge Base</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root {
+  --primary: #1a56db;
+  --primary-light: #e8effc;
+  --primary-dark: #1240a8;
+  --accent: #0d9488;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,.08), 0 4px 6px -2px rgba(0,0,0,.04);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --transition: 0.2s ease;
+  --hot: #ef4444;
+  --warm: #f59e0b;
+  --cool: #3b82f6;
+  --easy: #22c55e;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── Navigation ── */
+.navbar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 0 24px;
+}
+.navbar-inner {
+  max-width: 1400px; margin: 0 auto;
+  display: flex; align-items: center; gap: 8px;
+  height: 60px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.navbar-inner::-webkit-scrollbar { display: none; }
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 1.15rem; font-weight: 700; color: var(--primary);
+  white-space: nowrap; margin-right: 8px;
+  text-decoration: none;
+}
+.nav-logo i { font-size: 1.4rem; color: var(--accent); }
+.nav-tabs { display: flex; gap: 2px; }
+.nav-tab {
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: .92rem; font-weight: 500; cursor: pointer;
+  color: var(--text-muted); white-space: nowrap;
+  transition: all var(--transition);
+  border: none; background: none; font-family: inherit;
+}
+.nav-tab:hover { background: var(--primary-light); color: var(--primary); }
+.nav-tab.active { background: var(--primary); color: #fff; }
+.nav-tab i { margin-right: 4px; }
+
+.mobile-menu-btn {
+  display: none; background: none; border: none; font-size: 1.4rem;
+  cursor: pointer; color: var(--text); padding: 8px; margin-left: auto;
+}
+
+/* ── Main Content ── */
+.main { max-width: 1400px; margin: 0 auto; padding: 24px; }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Cards ── */
+.card {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 24px; margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+.card-header {
+  font-size: 1.2rem; font-weight: 700; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+  padding-bottom: 12px; border-bottom: 2px solid var(--primary-light);
+}
+.card-header i { color: var(--primary); font-size: 1.3rem; }
+
+/* ── Stats Row ── */
+.stats-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px; margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 20px;
+  text-align: center; border-left: 4px solid var(--primary);
+}
+.stat-card .stat-num { font-size: 2rem; font-weight: 800; color: var(--primary); }
+.stat-card .stat-label { font-size: .85rem; color: var(--text-muted); margin-top: 4px; }
+.stat-card.warn { border-left-color: var(--warm); }
+.stat-card.warn .stat-num { color: var(--warm); }
+.stat-card.danger { border-left-color: var(--hot); }
+.stat-card.danger .stat-num { color: var(--hot); }
+
+/* ── Tables ── */
+.data-table {
+  width: 100%; border-collapse: collapse; font-size: .9rem;
+}
+.data-table th {
+  background: #f8fafc; padding: 10px 12px; text-align: left;
+  font-weight: 600; border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+.data-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+.data-table tr:hover td { background: var(--primary-light); }
+.data-table .num { text-align: center; font-weight: 600; }
+
+/* ── Tags ── */
+.tag {
+  display: inline-block; padding: 2px 10px; border-radius: 99px;
+  font-size: .78rem; font-weight: 600;
+}
+.tag-hot { background: #fef2f2; color: #dc2626; }
+.tag-warm { background: #fffbeb; color: #d97706; }
+.tag-cool { background: #eff6ff; color: #2563eb; }
+.tag-easy { background: #f0fdf4; color: #16a34a; }
+.tag-info { background: #f0fdfa; color: #0d9488; }
+
+/* ── College detail layout ── */
+.college-layout { display: flex; gap: 20px; }
+.college-sidebar {
+  width: 240px; flex-shrink: 0;
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); border: 1px solid var(--border);
+  padding: 12px 0; max-height: calc(100vh - 140px);
+  overflow-y: auto; position: sticky; top: 80px;
+}
+.college-sidebar-item {
+  display: block; width: 100%; padding: 10px 16px;
+  border: none; background: none; text-align: left;
+  font-size: .9rem; cursor: pointer; font-family: inherit;
+  color: var(--text); transition: all var(--transition);
+  border-left: 3px solid transparent;
+}
+.college-sidebar-item:hover { background: var(--primary-light); color: var(--primary); }
+.college-sidebar-item.active { background: var(--primary-light); color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
+.college-detail { flex: 1; min-width: 0; }
+
+/* ── Accordion ── */
+.accordion { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.accordion-item { border-bottom: 1px solid var(--border); }
+.accordion-item:last-child { border-bottom: none; }
+.accordion-header {
+  width: 100%; padding: 16px 20px; text-align: left;
+  background: var(--card); border: none; font-size: 1rem;
+  font-weight: 600; cursor: pointer; font-family: inherit;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.accordion-header:hover { background: #f8fafc; }
+.accordion-header i { transition: transform .3s; }
+.accordion-header.open i { transform: rotate(180deg); }
+.accordion-body { display: none; padding: 16px 20px; background: #fafafa; border-top: 1px solid var(--border); }
+.accordion-body.show { display: block; }
+
+/* ── Alert / Callout ── */
+.alert {
+  padding: 14px 18px; border-radius: var(--radius-sm);
+  margin-bottom: 16px; font-size: .9rem; line-height: 1.6;
+}
+.alert-info { background: #eff6ff; border-left: 4px solid var(--primary); color: #1e40af; }
+.alert-warn { background: #fffbeb; border-left: 4px solid var(--warm); color: #92400e; }
+.alert-danger { background: #fef2f2; border-left: 4px solid var(--hot); color: #991b1b; }
+
+/* ── Chart container ── */
+.chart-wrap { position: relative; width: 100%; max-width: 800px; margin: 0 auto; }
+.chart-wrap canvas { max-height: 400px; }
+
+/* ── Grid ── */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+
+/* ── Concept Cards ── */
+.concept-card {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 20px;
+  border-top: 4px solid var(--primary);
+}
+.concept-card h4 { font-size: 1rem; color: var(--primary); margin-bottom: 8px; }
+.concept-card p { font-size: .88rem; color: var(--text-muted); }
+
+/* ── Process Steps ── */
+.steps { display: flex; gap: 0; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
+.step {
+  flex: 0 0 200px; text-align: center; padding: 20px;
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  position: relative;
+}
+.step-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--primary); color: #fff; font-weight: 700; font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+.step-arrow {
+  display: flex; align-items: center; font-size: 1.5rem; color: var(--primary);
+  padding: 0 8px; margin-top: 30px;
+}
+.step h4 { font-size: .95rem; margin-bottom: 4px; }
+.step p { font-size: .8rem; color: var(--text-muted); }
+
+/* ── Formula Box ── */
+.formula-box {
+  background: linear-gradient(135deg, #1e293b, #334155);
+  color: #f1f5f9; border-radius: var(--radius);
+  padding: 20px 24px; font-family: "JetBrains Mono", "Courier New", monospace;
+  font-size: 1rem; text-align: center; letter-spacing: 0.5px;
+  overflow-x: auto;
+}
+
+/* ── Download Card ── */
+.dl-card {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 20px; border: 1px solid var(--border); transition: all var(--transition);
+}
+.dl-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.dl-card i { font-size: 2rem; color: var(--primary); }
+.dl-card .dl-info { flex: 1; }
+.dl-card h4 { font-size: 1rem; margin-bottom: 4px; }
+.dl-card p { font-size: .82rem; color: var(--text-muted); }
+.dl-card .dl-btn {
+  padding: 8px 16px; background: var(--primary); color: #fff;
+  border-radius: var(--radius-sm); text-decoration: none; font-size: .85rem;
+  font-weight: 600; white-space: nowrap; transition: all var(--transition);
+}
+.dl-card .dl-btn:hover { background: var(--primary-dark); }
+
+/* ── Difficulty bar ── */
+.diff-bar {
+  height: 8px; border-radius: 4px; background: #e2e8f0; margin-top: 4px;
+  overflow: hidden;
+}
+.diff-bar-fill { height: 100%; border-radius: 4px; transition: width .5s; }
+.diff-bar-fill.hot { background: var(--hot); }
+.diff-bar-fill.warm { background: var(--warm); }
+.diff-bar-fill.cool { background: var(--cool); }
+.diff-bar-fill.easy { background: var(--easy); }
+
+/* ── Year Tab ── */
+.year-tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+.year-tab {
+  padding: 8px 24px; border-radius: var(--radius-sm);
+  font-size: .95rem; font-weight: 600; cursor: pointer;
+  border: 2px solid var(--border); background: var(--card);
+  font-family: inherit; transition: all var(--transition);
+}
+.year-tab:hover { border-color: var(--primary); color: var(--primary); }
+.year-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .nav-tabs { display: none; }
+  .nav-tabs.show { display: flex; flex-direction: column; position: absolute; top: 60px; left: 0; right: 0; background: var(--card); border-bottom: 2px solid var(--border); box-shadow: var(--shadow-lg); padding: 8px; z-index: 99; }
+  .mobile-menu-btn { display: block; }
+  .college-layout { flex-direction: column; }
+  .college-sidebar { width: 100%; max-height: none; position: static; display: flex; flex-wrap: wrap; gap: 4px; padding: 8px; }
+  .college-sidebar-item { width: auto; flex: 0 0 auto; font-size: .8rem; padding: 6px 10px; border-left: none; border-radius: var(--radius-sm); }
+  .steps { flex-direction: column; align-items: stretch; }
+  .step-arrow { display: none; }
+  .data-table { font-size: .75rem; }
+  .data-table th, .data-table td { padding: 6px 8px; }
+  .navbar-inner { padding: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════ NAVIGATION ════ -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="nav-logo" href="#" onclick="switchTab('overview')">
+      <i class="fa-solid fa-graduation-cap"></i> 重邮转专业知识库
+      <span style="font-size:.7rem;font-weight:400;color:var(--text-muted);margin-left:4px;">by 绿色的氢原子</span>
+    </a>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="菜单">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="nav-tabs" id="navTabs">
+      <button class="nav-tab active" onclick="switchTab('overview')"><i class="fa-solid fa-compass"></i> 总则</button>
+      <button class="nav-tab" onclick="switchTab('colleges')"><i class="fa-solid fa-building-columns"></i> 学院详情</button>
+      <button class="nav-tab" onclick="switchTab('yearly')"><i class="fa-solid fa-chart-line"></i> 历年数据</button>
+      <button class="nav-tab" onclick="switchTab('policies')"><i class="fa-solid fa-file-contract"></i> 考核方案</button>
+      <button class="nav-tab" onclick="switchTab('guide')"><i class="fa-solid fa-book"></i> 转专业攻略</button>
+      <button class="nav-tab" onclick="switchTab('stats')"><i class="fa-solid fa-chart-pie"></i> 数据统计</button>
+      <button class="nav-tab" onclick="switchTab('downloads')"><i class="fa-solid fa-download"></i> 实用下载</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ════ MAIN CONTENT ════ -->
+<main class="main">
+
+<!-- ── TAB 1: 总则 ── -->
+<div class="tab-content active" id="tab-overview">
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num">14</div><div class="stat-label">接收转专业学院</div></div>
+    <div class="stat-card"><div class="stat-num">202~370</div><div class="stat-label">每年接收人数(2026年)</div></div>
+    <div class="stat-card"><div class="stat-num">7:3</div><div class="stat-label">成绩与面试加权比例(约)</div></div>
+    <div class="stat-card warn"><div class="stat-num">80分</div><div class="stat-label">热门学院常见门槛</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><i class="fa-solid fa-circle-info"></i> 转专业基本流程</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>大一上学期</h4>
+        <p>努力学习，争取高均分。不能挂科！转专业只看大一上成绩。</p>
+      </div>
+      <div class="step-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>报名阶段</h4>
+        <p>通过教务在线提交转专业申请，选择目标专业（第一志愿+第二志愿）。</p>
+      </div>
+      <div class="step-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>第一层筛选</h4>
+        <p>学院根据成绩和条件审核，按1:1.5比例确定面试名单。</p>
+      </div>
+      <div class="step-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>面试考核</h4>
+        <p>只有面试没有笔试。考察学习能力、专业认知、综合素质等。</p>
+      </div>
+      <div class="step-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <h4>录取公示</h4>
+        <p>按综合成绩排名择优录取，公示无异议后完成学籍异动。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-calculator"></i> 总均分计算公式</div>
+      <div class="formula-box">
+        总均分 = Σ(课程学分 × 课程单均分) / 总学分
+      </div>
+      <p style="margin-top: 12px; font-size: .9rem; color: var(--text-muted);">
+        <strong>示例：</strong>小明修10学分（高数6学分100分 + 英语3学分90分 + 水课1学分90分）<br>
+        总均分 = (6×100 + 3×90 + 1×90) / 10 = <strong>96分</strong>
+      </p>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-triangle-exclamation"></i> 核心规则</div>
+      <div class="alert alert-danger"><strong>绝对不能挂科！</strong>任何一门课程单均分低于60分即算挂科，补考过也算挂科，一旦挂科即失去转专业资格。</div>
+      <div class="alert alert-warn"><strong>只看大一上成绩。</strong>大一上学期成绩是转专业的唯一评判依据。大一下挂科不影响转专业结果。</div>
+      <div class="alert alert-info"><strong>成绩为主，面试为辅。</strong>总均分与面试的加权比例约为 7:3。重点在于提高大一上学期成绩。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><i class="fa-solid fa-book-open"></i> 核心概念速查</div>
+    <div class="grid-3">
+      <div class="concept-card">
+        <h4>📐 学分</h4>
+        <p>反映课程重要程度，学分越高的课程越重要，对总均分影响越大。</p>
+      </div>
+      <div class="concept-card">
+        <h4>📊 单均分</h4>
+        <p>单门课程最终得分 = 平时分 + 期末考试成绩，加权比例因课程类型不同而异（水课约4:6，数学约1:1）。</p>
+      </div>
+      <div class="concept-card">
+        <h4>🎯 总均分</h4>
+        <p>转专业最重要的评判标准。由每门学分课程的单均分加权计算得出。</p>
+      </div>
+      <div class="concept-card">
+        <h4>📈 绩点</h4>
+        <p>对转专业几乎无作用，仅对出国读研较为重要。不作为选拔流程的评判标准。</p>
+      </div>
+      <div class="concept-card">
+        <h4>⚠️ 挂科</h4>
+        <p>单均分未达60分即为挂科。一旦挂科，与转专业彻底无缘。</p>
+      </div>
+      <div class="concept-card">
+        <h4>🔢 复录比</h4>
+        <p>进入面试人数 ÷ 成功录取人数。复录比越高，竞争越激烈。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><i class="fa-solid fa-list-check"></i> 通用报名条件（参考2026年）</div>
+    <p style="margin-bottom:12px;">根据《重庆邮电大学本科生转专业管理办法（修订）》（重邮〔2020〕310号），各学院在满足学校基本要求的基础上，制定了各自的转入条件。以下是常见要求汇总：</p>
+    <div class="grid-2">
+      <div>
+        <h4 style="color:var(--accent);margin-bottom:8px;">✅ 基本条件（多数学院要求）</h4>
+        <ul style="font-size:.9rem; padding-left:18px; line-height:2;">
+          <li>在校期间所修课程（含选修）无补考、重修记录</li>
+          <li>在校期间无校通报批评或纪律处分</li>
+          <li>思想品德优良、身心健康</li>
+          <li>对转入专业有浓厚兴趣</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color:var(--hot);margin-bottom:8px;">🚫 常见限制条件</h4>
+        <ul style="font-size:.9rem; padding-left:18px; line-height:2;">
+          <li>传媒/体育/国际学院（招生时有特殊要求）不能转专业</li>
+          <li>地方专项学生可以参与转专业</li>
+          <li>大一加入本专业实验班通常失去转专业资格</li>
+          <li>部分学院只接收理工科专业转入（如自动化学院）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TAB 2: 学院详情 ── -->
+<div class="tab-content" id="tab-colleges">
+  <div class="college-layout">
+    <div class="college-sidebar" id="collegeSidebar"></div>
+    <div class="college-detail" id="collegeDetail"></div>
+  </div>
+</div>
+
+<!-- ── TAB 3: 历年数据 ── -->
+<div class="tab-content" id="tab-yearly">
+  <div class="year-tabs">
+    <button class="year-tab active" onclick="switchYear('y2023', event)">📅 2023年</button>
+    <button class="year-tab" onclick="switchYear('y2025', event)">📅 2025年</button>
+    <button class="year-tab" onclick="switchYear('y2026', event)">📅 2026年（最新）</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><i class="fa-solid fa-table"></i> <span id="yearTableTitle">2023年各学院转专业计划接收人数</span></div>
+    <div style="overflow-x:auto;">
+      <div id="yearTableContainer"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><i class="fa-solid fa-chart-bar"></i> 历年接收人数对比（按学院汇总）</div>
+    <div class="chart-wrap"><canvas id="yearCompareChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ── TAB 4: 考核方案 ── -->
+<div class="tab-content" id="tab-policies">
+  <p style="margin-bottom:16px;color:var(--text-muted);">
+    以下内容整理自各学院2026年本科生转专业考核录取实施方案。点击学院名称展开查看详情。
+  </p>
+  <div class="accordion" id="policyAccordion"></div>
+</div>
+
+<!-- ── TAB 5: 转专业攻略 ── -->
+<div class="tab-content" id="tab-guide">
+  <div class="alert alert-info">
+    <strong>说明：</strong>本攻略基于2022及2024年转专业情况编写，由22/23/24级转专业群成员集体维护。攻略内容仅供参考，具体以学校当年官方通知为准。
+  </div>
+  <div class="card">
+    <div class="card-header"><i class="fa-solid fa-lightbulb"></i> 提高均分基本方法</div>
+    <div class="grid-2">
+      <div>
+        <h4 style="color:var(--accent);">1. 重视水课</h4>
+        <p style="font-size:.9rem;color:var(--text-muted);">大一上学期水课学分加起来几乎占据一半，非常重要的是最好拿高分的地方。</p>
+      </div>
+      <div>
+        <h4 style="color:var(--accent);">2. 学分优先</h4>
+        <p style="font-size:.9rem;color:var(--text-muted);">学分越高的课程越要考得高，这样总均分才会高。</p>
+      </div>
+      <div>
+        <h4 style="color:var(--accent);">3. 抓平时分</h4>
+        <p style="font-size:.9rem;color:var(--text-muted);">平时分可能在关键时刻保你不挂科，课堂表现、作业提交都很重要。</p>
+      </div>
+      <div>
+        <h4 style="color:var(--accent);">4. 课程加权比例参考</h4>
+        <p style="font-size:.9rem;color:var(--text-muted);">水课平时:期末≈4:6 | 数学类≈1:1 | 英语类≈1:1</p>
+      </div>
+    </div>
+  </div>
+  <div class="card" id="guideCollegeAnalysis"></div>
+  <div class="card">
+    <div class="card-header"><i class="fa-solid fa-star"></i> 面向全校的选拔型实验班</div>
+    <div class="grid-2">
+      <div style="border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+        <h4 style="color:var(--primary);">📡 通信IT精英实验班</h4>
+        <p style="font-size:.9rem;margin-top:8px;">面向全校，开学初即进行选拔。选拔标准为学生高考成绩在所在省份来重邮学生的排名，有高中数学物理竞赛奖者更优。</p>
+        <p style="font-size:.85rem;color:var(--accent);margin-top:8px;">✅ 进入实验班等于提前转专业，默认专业变更为通信工程。</p>
+        <p style="font-size:.85rem;color:var(--warm);margin-top:4px;">⚠️ 竞争压力大。</p>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+        <h4 style="color:var(--primary);">💻 计算机文峰实验班</h4>
+        <p style="font-size:.9rem;margin-top:8px;">面向全校，大一上学期结束时选拔（比转专业早一个月左右）。选拔标准与转专业一样，有计算机赛事奖牌者优先。</p>
+        <p style="font-size:.85rem;color:var(--accent);margin-top:8px;">✅ 进入实验班等于提前转专业，大一下即到新专业学习，默认变更为计算机科学与技术。</p>
+        <p style="font-size:.85rem;color:var(--warm);margin-top:4px;">⚠️ 课程为数学+计算机，学习难度很大，偏科研向。</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><i class="fa-solid fa-comment-dots"></i> 编者寄语</div>
+    <blockquote style="font-size:.95rem;color:var(--text-muted);border-left:3px solid var(--accent);padding-left:16px;">
+      <p>转专业之路远没有同学们想象的那么难，只要踏实学习，不需要多卷，就可以转入目标专业。另外，转专业并非生死，转不过去也许是人生的另一种可能，不用垂头丧气，永远保持向上的力气，不管在什么专业都能获得巨大的收获。</p>
+      <p style="margin-top:8px;"><strong>交流群：</strong>重邮转专业信息交流群 1051023556 | 江苏人在重邮 527925865</p>
+    </blockquote>
+  </div>
+</div>
+
+<!-- ── TAB 6: 数据统计 ── -->
+<div class="tab-content" id="tab-stats">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-chart-pie"></i> 2024-2025学年预录取人数分布（共233人）</div>
+      <div class="chart-wrap"><canvas id="admitPieChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-chart-bar"></i> 2024-2025学年各学院预录取人数</div>
+      <div class="chart-wrap"><canvas id="admitBarChart"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><i class="fa-solid fa-table-list"></i> 2024-2025学年转专业预录取统计表</div>
+    <div style="overflow-x:auto;" id="admitStatsTable"></div>
+  </div>
+</div>
+
+<!-- ── TAB 7: 实用下载 ── -->
+<div class="tab-content" id="tab-downloads">
+  <div class="grid-2">
+    <div class="dl-card">
+      <i class="fa-solid fa-file-lines"></i>
+      <div class="dl-info">
+        <h4>重庆邮电大学本科生转专业审批表</h4>
+        <p>转专业正式申请时需要填写的审批表格。包含个人信息、转出/转入专业、学院意见等。</p>
+      </div>
+    </div>
+    <div class="dl-card">
+      <i class="fa-solid fa-file-lines"></i>
+      <div class="dl-info">
+        <h4>课程认定及学分成绩转换表</h4>
+        <p>转专业成功后，用于将原专业已修课程学分认定为转入专业对应课程学分。</p>
+      </div>
+    </div>
+    <div class="dl-card">
+      <i class="fa-solid fa-file-lines"></i>
+      <div class="dl-info">
+        <h4>2026年各学院转专业计划接收人数表</h4>
+        <p>附件1 — 2026年各学院各专业转专业计划接收人数完整表格（2024级/2025级）。</p>
+      </div>
+    </div>
+    <div class="dl-card">
+      <i class="fa-solid fa-file-lines"></i>
+      <div class="dl-info">
+        <h4>2026年各学院考核录取实施方案</h4>
+        <p>附件2 — 13个学院的完整考核录取实施方案（42页），包含各学院的具体申请条件、计算公式、面试流程。</p>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:20px;">
+    <div class="card-header"><i class="fa-solid fa-circle-info"></i> 说明</div>
+    <p style="font-size:.9rem;color:var(--text-muted);">
+      以上文件为重庆邮电大学官方发布的转专业相关文件，本网站已将其核心内容整理展示。如需获取原始文件，请访问重庆邮电大学教务在线官网或联系相关学院教学秘书。表格模板可在教务在线下载。
+    </p>
+  </div>
+</div>
+
+</main>
+
+<footer style="text-align:center;padding:24px;color:var(--text-muted);font-size:.82rem;border-top:1px solid var(--border);max-width:1400px;margin:0 auto;">
+  <p>📘 重邮转专业知识库 — 由 <strong style="color:var(--primary);">绿色的氢原子</strong> 整理制作</p>
+  <p style="margin-top:4px;">数据来源：重庆邮电大学教务在线官方通知及各学院公告 | 仅供参考，以官方最新通知为准</p>
+  <p style="margin-top:4px;">最后更新：2026年7月</p>
+</footer>
+
+<script>
+// ═══════════════════════════════════
+// DATA
+// ═══════════════════════════════════
+
+// ── College data for TAB 2 ──
+const colleges = [
+  {
+    id: 'tx', name: '通信与信息工程学院', icon: 'fa-satellite-dish',
+    heat: 5, diff: '较大', diffPct: 80, threshold: '80分',
+    summary: '重邮老牌强院，第四轮学科评估B+。热度极高，有80分报名门槛。自2024年起仅剩通信工程和电子信息工程两个专业，大二下分流。',
+    quotas: {
+      '2023': { '通信工程': '4/20', '电子信息工程': '3/10', '信息工程': '2/5', '数字媒体技术': '3/6', '合计': '12/41' },
+      '2025': { '通信工程': '4/-', '电子信息工程': '3/-', '信息工程': '2/-', '数字媒体技术': '3/-', '通信与信息类(2024级)': '-/60', '合计': '12/60' },
+      '2026': { '通信工程(2024级)': '0', '通信与信息工程类(2025级)': '20', '电子信息工程': '0', '合计': '0/20' }
+    },
+    conditions: '必修课加权平均成绩≥80分或排名前30%。数学/英语/编程类课程均分≥80分。只接受第一志愿，不受理第二志愿及大二学生。',
+    formula: '总分 = 必修课加权平均成绩 + 面试成绩(30分) + 科创加分(20分)',
+    notes: '通信学院2022年面试名单按数学类、英语类、计算机类课程计算总均分（与其它学院明显不同）。第一志愿报名通信且必修课加权成绩排名和绩点排名均在原专业前5名者优先录取。',
+    guide: '招收计划较多，达到80分报名门槛即有极高转入几率。'
+  },
+  {
+    id: 'cs', name: '计算机科学与技术学院', icon: 'fa-laptop-code',
+    heat: 5, diff: '异常难', diffPct: 95, threshold: '80分/绩点3.3',
+    summary: '最热门学院，第四轮学科评估B+。计算机科学与技术竞争压力极大，几乎是各专业前三名竞争转入。',
+    quotas: {
+      '2023': { '计算机科学与技术': '2/6', '网络工程': '2/6', '智能科学与技术': '2/12', '空间信息与数字技术': '2/6', '数据科学与大数据技术': '2/12', '人工智能': '2/6', '合计': '12/48' },
+      '2025': { '计算机科学与技术': '2/6', '智能科学与技术': '2/8', '数据科学与大数据技术': '2/8', '人工智能': '2/6', '网络工程': '0/0', '空间信息': '0/0', '合计': '8/28' },
+      '2026': { '计算机科学与技术(2024)': '2', '计算机科学与技术(2025)': '6', '软件工程(2024)': '2', '软件工程(2025)': '6', '网络工程': '0', '合计': '4/12' }
+    },
+    conditions: '绩点≥3.3。所修课程无补考重修，无违纪。2026年含软件工程专业。',
+    formula: '基础成绩=绩点×25+科创加分 | 综合成绩=基础成绩×0.7+面试×0.3',
+    notes: '科创加分含CCF CSP、ICPC、华为软件精英挑战赛等10类竞赛，最高10分。',
+    guide: '计科复录比约1.5:1，竞争异常激烈。软件工程复录比约1:1，较易转入。'
+  },
+  {
+    id: 'ai', name: '人工智能学院', icon: 'fa-brain',
+    heat: 4, diff: '较大', diffPct: 78, threshold: '80分/绩点3.2',
+    summary: '包含大数据、智科、人工智能、机器人工程等专业。大数据竞争不输计科，人工智能连续两年报名人数未达招收计划。',
+    quotas: {
+      '2023': { '(归属计算机学院统计)': '' },
+      '2025': { '智能科学与技术': '2/8', '数据科学与大数据技术': '2/8', '人工智能': '2/6', '合计': '6/22' },
+      '2026': { '智能科学与技术(2024)': '2', '智能科学与技术(2025)': '6', '数据科学与大数据技术(2024)': '2', '数据科学与大数据技术(2025)': '6', '人工智能(2024)': '2', '人工智能(2025)': '6', '机器人工程(2024)': '2', '机器人工程(2025)': '6', '合计': '8/24' }
+    },
+    conditions: '绩点≥3.2。无补考重修，无违纪记录。',
+    formula: '基础成绩=绩点×25+科创加分 | 综合成绩=基础成绩×0.7+面试×0.3',
+    notes: '科创加分含CCF CSP、ICPC、Kaggle、机器人竞赛等，最高10分。',
+    guide: '大数据复录比约2:1；智科约1.5:1；人工智能达门槛即可转入；机器人工程此前几乎没有转入意愿。'
+  },
+  {
+    id: 'electronic', name: '电子科学与工程学院', icon: 'fa-microchip',
+    heat: 3, diff: '中等', diffPct: 62, threshold: '75分/绩点2.7',
+    summary: '包含电子科学与技术、电磁场与无线技术、光电信息科学与工程等。近一两年热度水涨船高，电子科学与技术专业尤为火爆。',
+    quotas: {
+      '2023': { '电子科学与技术': '5/10', '电磁场与无线技术': '3/5', '光电信息科学与工程': '5/10', '集成电路': '3/5', '微电子': '5/10', '合计': '21/40' },
+      '2025': { '电子科学与技术': '2/10', '电磁场': '2/10', '光电信息': '2/10', '集成电路': '2/10', '微电子': '2/10', '合计': '10/50' },
+      '2026': { '电子科学与技术': '3/15', '电磁场与无线技术': '2/10', '光电信息科学与工程': '2/10', '应用物理学': '0/4', '合计': '7/39' }
+    },
+    conditions: '绩点≥2.7。所修课程无补考重修。',
+    formula: '考核成绩 = 绩点折算百分制×60% + 面试×40%',
+    notes: '面试人数按录取人数1.5倍确定。',
+    guide: '电子科学与技术专业均分80以上较稳妥。其他专业难度较低。'
+  },
+  {
+    id: 'ic', name: '集成电路学院', icon: 'fa-memory',
+    heat: 3, diff: '中等', diffPct: 60, threshold: '绩点3.0',
+    summary: '包含微电子科学与工程、集成电路设计与集成系统、机械设计制造及其自动化、智能制造工程。近两年热度上升迅速，集成电路/微电子专业火爆。',
+    quotas: {
+      '2023': { '(归属光电学院统计)': '' },
+      '2025': { '(归属光电/先进制造学院)': '' },
+      '2026': { '微电子(2024)': '10', '微电子(2025)': '10', '集成电路(2024)': '10', '集成电路(2025)': '10', '机械设计(2024)': '5', '机械设计(2025)': '5', '智能制造(2024)': '5', '智能制造(2025)': '5', '合计': '30/30' }
+    },
+    conditions: '绩点≥3.0。无补考重修，无违纪。只接收理工科专业。',
+    formula: '综合成绩 = 绩点×25×0.5 + 面试×0.5',
+    notes: '2026年新增学院，整合了原光电学院和先进制造学院部分专业。',
+    guide: '集成电路和微电子专业75分门槛，均分80以上较稳妥。机械类转入难度较小。'
+  },
+  {
+    id: 'auto', name: '自动化学院', icon: 'fa-robot',
+    heat: 3, diff: '中等偏低', diffPct: 50, threshold: '无明确分数门槛',
+    summary: '除通信与计算机之外发展最好的学院，有第三大院之称，工科实力不俗。转入难度不大，复录比约1:1，但只接收工科专业转入。',
+    quotas: {
+      '2023': { '自动化类(共6专业)': '按大类总人数10%接收共46人', '合计': '46' },
+      '2025': { '自动化': '4/8', '测控': '3/3', '电气': '8/9', '物联网': '6/6', '智能电网': '0/0', '智能车辆': '3/3', '合计': '24/29' },
+      '2026': { '自动化': '9/8', '测控': '3/3', '电气': '9/9', '物联网': '6/6', '智能车辆': '3/5', '合计': '30/31' }
+    },
+    conditions: '只接收理工科专业学生转入。转入前应完成当前学期应修全部课程。',
+    formula: '采用必修课加权平均学分绩点计算，按不高于1:1.5比例确定面试名单。',
+    notes: '服兵役、少数民族或创业返校学生优先转入。这是关键限制：经管、外国语等学院学生无法转入自动化学院。',
+    guide: '只在原专业大一学过高等数学和大学物理的工科专业才能转入。'
+  },
+  {
+    id: 'ns', name: '网络空间安全与信息法学院', icon: 'fa-shield-halved',
+    heat: 3, diff: '中等', diffPct: 55, threshold: '各专业不同',
+    summary: '随着国家对网安人才的需求增加，网安学院成为计算机学院以外的不二选择。有75分报名门槛。同时包含法学专业。',
+    quotas: {
+      '2023': { '法学': '1/2', '知识产权': '1/2', '信息安全': '3/6', '网络空间安全': '2/4', '合计': '7/16' },
+      '2025': { '法学': '1/3', '信息安全': '0/5', '网络空间安全': '5/20', '合计': '6/28' },
+      '2026': { '法学': '1/5', '信息安全': '2/5', '网络空间安全': '5/20', '合计': '8/30' }
+    },
+    conditions: '法学接受理工类及文史类生源。信息安全/网安只接收理工类生源。',
+    formula: '总分=(绩点×25+科创加分)×50%+面试×50%',
+    notes: '科创加分按竞赛级别从3分到20分不等。',
+    guide: '有75分报名门槛。网安专业是计算机方向之外的优质选择。'
+  },
+  {
+    id: 'se', name: '软件工程学院', icon: 'fa-code',
+    heat: 3, diff: '较低', diffPct: 35, threshold: '无额外分数门槛',
+    summary: '软件工程学习内容与计算机学院类似，更偏向就业。转专业热度中等，较为容易，复录比约1:1，2022年甚至没有安排面试完全按均分排名录取。',
+    quotas: {
+      '2023': { '软件工程': '30/30', '合计': '30/30' },
+      '2025': { '软件工程': '30/30', '合计': '30/30' },
+      '2026': { '软件工程(属计算机学院)': '2/6' }
+    },
+    conditions: '2026年起软件工程归属计算机科学与技术学院（示范性软件学院）统一管理。',
+    formula: '参照计算机学院方案。',
+    notes: '2026年软件工程已并入计算机学院统一招生。',
+    guide: '接收计划较多，多数时候报名人数小于接收计划，转入难度低。'
+  },
+  {
+    id: 'em', name: '经济管理学院', icon: 'fa-chart-simple',
+    heat: 2, diff: '容易(转入)', diffPct: 25, threshold: '无额外分数门槛',
+    summary: '大多数报考重邮的学生被调剂到的学院，是每年转专业大户。大一上学期最卷的学院，没有之一。大数据管理与应用、信息管理与信息系统是转CS未果的平替。',
+    quotas: {
+      '2023': { '信管': '10/10', '会计学': '0/10', '市场营销': '10/10', '经济学': '0/10', '大数据管理': '0/10', '合计': '20/80' },
+      '2025': { '信管': '0/10', '会计学': '5/15', '市场营销': '5/15', '经济学': '5/15', '大数据管理': '0/10', '合计': '20/80' },
+      '2026': { '信管': '0/10', '会计学': '5/15', '市场营销': '5/15', '经济学': '5/0', '金融工程': '5/15', '大数据管理': '0/10', '数字经济': '0/15', '合计': '20/80' }
+    },
+    conditions: '所修课程无补考重修记录。',
+    formula: '面试总分100分，根据面试成绩排序从高到低录取，面试成绩低于60分不予录取。',
+    notes: '2026年新增数字经济专业。该学院学生无法转入自动化学院（电子商务专业也是）。',
+    guide: '经管学生转入计算机/通信等学院需要特别注意是否满足目标学院的数学/编程类课程要求。大数据管理与应用专业考研计算机类完全够用，不算跨考。'
+  },
+  {
+    id: 'math', name: '数学与统计学院/理学院', icon: 'fa-square-root-variable',
+    heat: 2, diff: '较低', diffPct: 30, threshold: '80分(双学位)/前50%(普通)',
+    summary: '一直不温不火，但本科学习数学对考研计算机类很有帮助，是通信、计算机、光电等之外的第一选择，性价比高。',
+    quotas: {
+      '2023': { '应用物理学': '5/10', '信息与计算科学': '8/10', '数据计算及应用': '8/10', '合计': '21/30' },
+      '2025': { '应用物理学': '5/10', '信息与计算科学': '5/10', '数据计算及应用': '5/10', '智科+数学双学位': '5/15', '通信+物理双学位': '5/15', '合计': '25/60' },
+      '2026': { '信息与计算科学': '5/10', '数据计算及应用': '5/10', '智科+数学双学位': '5/0', '数学与应用数学': '0/10', '合计': '15/30' }
+    },
+    conditions: '双学位项目：均分≥80或排名前30%，无补考重修。普通专业：排名前50%，无重修。',
+    formula: '总分=(绩点×25+科创加分)×50%+面试×50%',
+    notes: '2025年起新增两个双学位项目。2026年新增数学与应用数学专业。',
+    guide: '转入难度不大，性价比高。考计算机类研究生有数学本科背景很有优势。'
+  },
+  {
+    id: 'bio', name: '生命健康信息科学与工程学院', icon: 'fa-dna',
+    heat: 1, diff: '较低', diffPct: 22, threshold: '专业排名前60%',
+    summary: '涵盖生物医学工程、医学信息工程、生物信息学三大工科专业。生物医学工程近年来行业发展势头迅猛。',
+    quotas: {
+      '2023': { '生物医学工程': '10/10', '生物信息学': '10/10', '医学信息工程': '10/10', '合计': '30/30' },
+      '2025': { '生物医学工程': '5/10', '生物信息学': '5/10', '医学信息工程': '5/10', '合计': '15/30' },
+      '2026': { '生物医学工程': '15/10', '生物信息学': '15/10', '医学信息工程': '15/10', '合计': '45/30' }
+    },
+    conditions: '理工科专业排名前60%。无补考重修，无违纪。',
+    formula: '采用必修课平均学分绩点计算。面试人数按1:1.5确定。',
+    notes: '2026年大幅扩招（2024级从5人增至15人每专业）。',
+    guide: '该学院可以转入自动化学院。'
+  },
+  {
+    id: 'post', name: '现代邮政学院', icon: 'fa-truck-fast',
+    heat: 1, diff: '低', diffPct: 15, threshold: '专业排名前50%',
+    summary: '邮电类学校特色学院。大一有两个专业：邮政工程（工学）与电子商务（管理学）。保研率高于校平均，不算很卷，是保研的优秀选择。',
+    quotas: {
+      '2023': { '电子商务': '2/4', '物流管理': '2/3', '邮政工程': '5/6', '合计': '9/13' },
+      '2025': { '电子商务': '3/4', '物流管理': '3/4', '邮政工程': '5/6', '合计': '11/14' },
+      '2026': { '电子商务': '3/4', '物流管理': '3/4', '邮政工程': '5/6', '合计': '11/14' }
+    },
+    conditions: '2024/2025级理工类生源。无补考重修，必修课绩点排名前50%。',
+    formula: '考核成绩=绩点×25×60%+面试×40%',
+    notes: '转入申请数少于接收计划数且满足条件则全部录取。',
+    guide: '转入较为简单，基本报名即进。该院也是转专业大户。电子商务专业无法转入自动化，邮政工程可以。'
+  },
+  {
+    id: 'fl', name: '外国语学院', icon: 'fa-language',
+    heat: 1, diff: '较低', diffPct: 28, threshold: '70分/绩点2.0',
+    summary: '高考调剂重灾区之一。课程较为简单，大一没有数学类课程，因此均分普遍偏高。但转专业受限较大，大部分转入法学等对数学没有要求的专业。',
+    quotas: {
+      '2023': { '英语': '10/10', '翻译': '10/10', '合计': '20/20' },
+      '2025': { '英语': '10/10', '翻译': '10/10', '合计': '20/20' },
+      '2026': { '英语': '10/10', '翻译': '10/10', '合计': '20/20' }
+    },
+    conditions: '绩点≥2.0。必修课均分≥70或排名前50%。英语课程均分≥80。',
+    formula: '综合成绩=必修课加权平均成绩×40%+面试×60%',
+    notes: '转入后每班不超过35人。配备学业导师提供1学期适应性指导。',
+    guide: '该学院无法转入自动化学院（因无数学课程）。'
+  },
+  {
+    id: 'media', name: '传媒艺术学院', icon: 'fa-film',
+    heat: 1, diff: '低', diffPct: 15, threshold: '绩点2.0',
+    summary: '仅广播电视编导专业接收转专业。高考招生时有特殊要求的学生不能申请转专业。',
+    quotas: {
+      '2023': { '(未单独列出)': '' },
+      '2025': { '(未单独列出)': '' },
+      '2026': { '广播电视编导(2024)': '4', '广播电视编导(2025)': '10', '合计': '4/10' }
+    },
+    conditions: '绩点≥2.0。无校通报批评或纪律处分。',
+    formula: '采用必修课平均学分绩点计算。面试含心理测试和专业面试。',
+    notes: '心理测试不合格直接不予录取。专业面试含文学艺术常识、影视艺术常识。',
+    guide: '传媒/体育/国际学院高考招生时有特殊要求，不能申请转专业。'
+  }
+];
+
+// ── Yearly data (simplified - for TAB 3) ──
+const yearlyData = {
+  'y2023': {
+    title: '2023年各学院转专业计划接收人数',
+    note: '2023年数据含2021级和2022级两个年级的接收人数。',
+    rows: [
+      ['通信与信息工程学院','通信工程','4','20','12','41'],
+      ['通信与信息工程学院','电子信息工程','3','10','',''],
+      ['通信与信息工程学院','信息工程','2','5','',''],
+      ['通信与信息工程学院','数字媒体技术','3','6','',''],
+      ['光电工程学院/国际半导体学院','电子科学与技术','5','10','21','40'],
+      ['光电工程学院/国际半导体学院','电磁场与无线技术','3','5','',''],
+      ['光电工程学院/国际半导体学院','光电信息科学与工程','5','10','',''],
+      ['光电工程学院/国际半导体学院','集成电路设计与集成系统','3','5','',''],
+      ['光电工程学院/国际半导体学院','微电子科学与工程','5','10','',''],
+      ['经济管理学院','信息管理与信息系统','10','10','20','80'],
+      ['经济管理学院','会计学','0','10','',''],
+      ['经济管理学院','市场营销','10','10','',''],
+      ['经济管理学院','经济学','0','10','',''],
+      ['经济管理学院','大数据管理与应用','0','10','',''],
+      ['经济管理学院','工商管理','0','10','',''],
+      ['经济管理学院','金融工程','0','10','',''],
+      ['经济管理学院','工程管理','0','10','',''],
+      ['现代邮政学院','电子商务','2','4','9','13'],
+      ['现代邮政学院','物流管理','2','3','',''],
+      ['现代邮政学院','邮政工程','5','6','',''],
+      ['计算机科学与技术学院','计算机科学与技术','2','6','12','48'],
+      ['计算机科学与技术学院','网络工程','2','6','',''],
+      ['计算机科学与技术学院','智能科学与技术','2','12','',''],
+      ['计算机科学与技术学院','空间信息与数字技术','2','6','',''],
+      ['计算机科学与技术学院','数据科学与大数据技术','2','12','',''],
+      ['计算机科学与技术学院','人工智能','2','6','',''],
+      ['外国语学院','英语','10','10','20','20'],
+      ['外国语学院','翻译','10','10','',''],
+      ['生物信息学院','生物医学工程','10','10','30','30'],
+      ['生物信息学院','生物信息学','10','10','',''],
+      ['生物信息学院','医学信息工程','10','10','',''],
+      ['网络空间安全与信息法学院','法学','1','2','7','16'],
+      ['网络空间安全与信息法学院','知识产权','1','2','',''],
+      ['网络空间安全与信息法学院','信息安全','3','6','',''],
+      ['网络空间安全与信息法学院','网络空间安全','2','4','',''],
+      ['网络空间安全与信息法学院','信息安全+法学双学位','0','2','',''],
+      ['自动化学院','自动化类(6专业)','按10%接收共46人','','46','46'],
+      ['理学院','应用物理学','5','10','21','30'],
+      ['理学院','信息与计算科学','8','10','',''],
+      ['理学院','数据计算及应用','8','10','',''],
+      ['先进制造工程学院','机械设计制造及其自动化','5','8','20','32'],
+      ['先进制造工程学院','机械电子工程','5','8','',''],
+      ['先进制造工程学院','机器人工程','5','8','',''],
+      ['先进制造工程学院','智能制造工程','5','8','',''],
+      ['软件工程学院','软件工程','30','30','30','30'],
+    ]
+  },
+  'y2025': {
+    title: '2025年各学院转专业计划接收人数',
+    note: '2025年数据含2023级和2024级两个年级的接收人数。注意：通信学院2024级改为大类招生（通信与信息类）。',
+    rows: [
+      ['通信与信息工程学院','通信工程/电子信息工程/信息工程/数字媒体技术','4(2023级合计12)','通信与信息类60(2024级)','12','60'],
+      ['光电工程学院','电子科学与技术','2','10','10','50'],
+      ['光电工程学院','电磁场与无线技术','2','10','',''],
+      ['光电工程学院','光电信息科学与工程','2','10','',''],
+      ['光电工程学院','集成电路设计与集成系统','2','10','',''],
+      ['光电工程学院','微电子科学与工程','2','10','',''],
+      ['经济管理学院','信息管理与信息系统','0','10','20','80'],
+      ['经济管理学院','会计学','5','15','',''],
+      ['经济管理学院','市场营销','5','15','',''],
+      ['经济管理学院','经济学','5','15','',''],
+      ['经济管理学院','工商管理','5','0','',''],
+      ['经济管理学院','金融工程','5','15','',''],
+      ['经济管理学院','工程管理','0','10','',''],
+      ['经济管理学院','大数据管理与应用','0','10','',''],
+      ['现代邮政学院','电子商务','3','4','11','14'],
+      ['现代邮政学院','物流管理','3','4','',''],
+      ['现代邮政学院','邮政工程','5','6','',''],
+      ['计算机科学与技术学院','计算机科学与技术','2','6','8','28'],
+      ['计算机科学与技术学院','智能科学与技术','2','8','',''],
+      ['计算机科学与技术学院','数据科学与大数据技术','2','8','',''],
+      ['计算机科学与技术学院','人工智能','2','6','',''],
+      ['外国语学院','英语','10','10','20','20'],
+      ['外国语学院','翻译','10','10','',''],
+      ['生命健康信息科学与工程学院','生物医学工程','5','10','15','30'],
+      ['生命健康信息科学与工程学院','生物信息学','5','10','',''],
+      ['生命健康信息科学与工程学院','医学信息工程','5','10','',''],
+      ['网络空间安全与信息法学院','法学','1','3','6','28'],
+      ['网络空间安全与信息法学院','信息安全','0','5','',''],
+      ['网络空间安全与信息法学院','网络空间安全','5','20','',''],
+      ['自动化学院','自动化','4','8','24','29'],
+      ['自动化学院','测控技术与仪器','3','3','',''],
+      ['自动化学院','电气工程及其自动化','8','9','',''],
+      ['自动化学院','物联网工程','6','6','',''],
+      ['自动化学院','智能电网信息工程','0','0','',''],
+      ['自动化学院','智能车辆工程','3','3','',''],
+      ['理学院','应用物理学','5','10','25','60'],
+      ['理学院','信息与计算科学','5','10','',''],
+      ['理学院','数据计算及应用','5','10','',''],
+      ['理学院','智科+数学双学位','5','15','',''],
+      ['理学院','通信工程+应用物理学双学位','5','15','',''],
+      ['先进制造工程学院','机械设计制造及其自动化','5','10','20','30'],
+      ['先进制造工程学院','机械电子工程','5','0','',''],
+      ['先进制造工程学院','机器人工程','5','10','',''],
+      ['先进制造工程学院','智能制造工程','5','10','',''],
+      ['软件工程学院','软件工程','30','30','30','30'],
+    ]
+  },
+  'y2026': {
+    title: '2026年各学院转专业计划接收人数（最新）',
+    note: '2026年数据。2024级计划接收202人，2025级计划接收370人，合计572人。注意：学院结构有调整（集成电路学院独立、软件工程并入计算机学院）。',
+    rows: [
+      ['通信与信息工程学院','通信与信息工程类(2025级)','-','20','0','20'],
+      ['电子科学与工程学院','电子科学与技术','3','15','7','39'],
+      ['电子科学与工程学院','电磁场与无线技术','2','10','',''],
+      ['电子科学与工程学院','光电信息科学与工程','2','10','',''],
+      ['电子科学与工程学院','应用物理学','0','4','',''],
+      ['电子科学与工程学院','通信工程+应用物理学双学位','0','0','',''],
+      ['计算机科学与技术学院（示范性软件学院）','计算机科学与技术','2','6','4','12'],
+      ['计算机科学与技术学院（示范性软件学院）','网络工程','0','0','',''],
+      ['计算机科学与技术学院（示范性软件学院）','软件工程','2','6','',''],
+      ['外国语学院','英语','10','10','20','20'],
+      ['外国语学院','翻译','10','10','',''],
+      ['经济管理学院','信息管理与信息系统','0','10','20','80'],
+      ['经济管理学院','会计学','5','15','',''],
+      ['经济管理学院','市场营销','5','15','',''],
+      ['经济管理学院','经济学','5','0','',''],
+      ['经济管理学院','金融工程','5','15','',''],
+      ['经济管理学院','工程管理','0','0','',''],
+      ['经济管理学院','大数据管理与应用','0','10','',''],
+      ['经济管理学院','数字经济','0','15','',''],
+      ['现代邮政学院','电子商务','3','4','11','14'],
+      ['现代邮政学院','物流管理','3','4','',''],
+      ['现代邮政学院','邮政工程','5','6','',''],
+      ['生命健康信息科学与工程学院','生物医学工程','15','10','45','30'],
+      ['生命健康信息科学与工程学院','生物信息学','15','10','',''],
+      ['生命健康信息科学与工程学院','医学信息工程','15','10','',''],
+      ['网络空间安全与信息法学院','法学','1','5','8','30'],
+      ['网络空间安全与信息法学院','信息安全','2','5','',''],
+      ['网络空间安全与信息法学院','网络空间安全','5','20','',''],
+      ['自动化学院','自动化','9','8','30','31'],
+      ['自动化学院','测控技术与仪器','3','3','',''],
+      ['自动化学院','电气工程及其自动化','9','9','',''],
+      ['自动化学院','物联网工程','6','6','',''],
+      ['自动化学院','智能车辆工程','3','5','',''],
+      ['数学与统计学院','信息与计算科学','5','10','15','30'],
+      ['数学与统计学院','数据计算及应用','5','10','',''],
+      ['数学与统计学院','智科+数学双学位','5','0','',''],
+      ['数学与统计学院','数学与应用数学','0','10','',''],
+      ['传媒艺术学院','广播电视编导','4','10','4','10'],
+      ['人工智能学院','智能科学与技术','2','6','8','24'],
+      ['人工智能学院','数据科学与大数据技术','2','6','',''],
+      ['人工智能学院','人工智能','2','6','',''],
+      ['人工智能学院','机器人工程','2','6','',''],
+      ['集成电路学院','微电子科学与工程','10','10','30','30'],
+      ['集成电路学院','机械设计制造及其自动化','5','5','',''],
+      ['集成电路学院','智能制造工程','5','5','',''],
+      ['集成电路学院','集成电路设计与集成系统','10','10','',''],
+    ]
+  }
+};
+
+// ── Policy data for TAB 4 ──
+const policies = [
+  {
+    name: '通信与信息工程学院',
+    conditions: '必修课加权平均成绩≥80分或排名前30%。数学/英语/编程类课程均分≥80分。只接受第一志愿，不受理第二志愿及大二学生。',
+    formula: '总分 = 必修课加权平均成绩 + 面试成绩(满分30分) + 科创加分(满分20分)',
+    interview: '面试主要考查学习动力、逻辑思维能力、观察与应变能力、自我管理能力、组织与交流能力、创新意识和创新能力、团队协作等。面试成绩不足18分（满分30分）不予录取。',
+    extra: '第一志愿报名通信且必修课加权成绩排名和绩点排名均在原专业前5名者优先录取。科创加分含14级竞赛等级加分（国家级一等奖14分到企业省部级三等奖1分）。',
+    note2025: '2025年要求：必修课加权平均成绩≥80分或排名前30%，数学/英语/编程类课程均分≥80分。大二需CET4≥425分。'
+  },
+  {
+    name: '电子科学与工程学院',
+    conditions: '必修课平均学分绩点≥2.7。所修课程（含选修）无补考、重修记录。无违法违纪处分。',
+    formula: '考核成绩 = (平均学分绩点/4.0)×100 × 60% + 面试成绩 × 40%',
+    interview: '面试人数按录取人数的1.5倍确定。面试官3~5人。面试内容包括：转专业前学习情况、发现分析和解决问题的能力、对转入专业的兴趣和潜力、获奖情况、思想政治品德表现、举止表达礼仪等。面试成绩须≥60分。',
+    extra: '学分认定原则：原专业课程需能覆盖转入专业所支撑的毕业要求。被认定课程学分不低于转入专业对应课程学分。',
+    note2025: '2025年要求基本一致，必修课加权平均成绩≥75分。'
+  },
+  {
+    name: '经济管理学院',
+    conditions: '在校期间所修课程无取消考试资格、考试不及格、补考或重修记录。',
+    formula: '面试总分100分，根据面试成绩排序从高到低录取',
+    interview: '面试从仪态仪表及语言表达、应用能力、逻辑分析能力、专业认知、学习能力、已学课程与申请专业的契合度等方面综合考核。面试成绩低于60分不予录取。分三组考核（工商管理组、管理工程组、应用经济学组）。',
+    extra: '学院纪委全程督查。联系QQ群：1094591745。',
+    note2025: '2025年方案与2026年基本一致。'
+  },
+  {
+    name: '计算机科学与技术学院',
+    conditions: '必修课平均学分绩点≥3.3。所修课程无补考重修，无违纪处分。',
+    formula: '基础成绩=绩点×25+科创加分 | 综合成绩=基础成绩×0.7+面试平均分×0.3',
+    interview: '面试人数/录取计划=1.5:1。面试主要考察计算机应用能力和对计算机相关专业的认识。面试成绩<60分不予录取。',
+    extra: '科创加分含10类竞赛（CCF CSP全国排名前15%、ICPC亚洲区域赛铜牌+、华为软件精英挑战赛成渝四强+等），每项满分10分，只取最高一项不叠加。',
+    note2025: '2025年要求：必修课加权平均成绩≥80分（2026改为绩点3.3）。'
+  },
+  {
+    name: '人工智能学院',
+    conditions: '必修课加权平均学分绩点≥3.2。所修课程无补考重修，无违纪处分。',
+    formula: '基础成绩=绩点×25+科创加分 | 综合成绩=基础成绩×0.7+面试平均分×0.3',
+    interview: '面试人数/录取计划=1.5:1。面试主要考察计算机应用能力和对计算机相关专业的认识。',
+    extra: '科创加分含CCF CSP、ICPC、Kaggle银牌/金牌、智能机器人创意大赛等8类竞赛，最高10分。联系群号：1091910185。',
+    note2025: '2025年方案原属于计算机学院统一管理。'
+  },
+  {
+    name: '外国语学院',
+    conditions: '平均学分绩点≥2.0。必修课加权平均成绩≥70分或排名前50%。英语课程平均分≥80分。获外语学科竞赛省部级以上奖励者不受成绩限制。',
+    formula: '综合成绩=必修课加权平均成绩×40%+面试成绩×60%',
+    interview: '考核分为心理测试和面试。面试考查英语听说能力、学习能力、专业发展潜力、组织与交流能力、创新与实践能力、团队协作等。面试满分100分，≥60分及格。按第一志愿录取，每班不超过35人。',
+    extra: '学院为转专业学生配备学业导师，提供1学期适应性指导。',
+    note2025: '2025年方案含笔试（综合英语+英语语法），笔试40%+面试60%。'
+  },
+  {
+    name: '生命健康信息科学与工程学院',
+    conditions: '理工科专业排名前60%。所修课程无补考重修，无违纪处分。',
+    formula: '采用必修课平均学分绩点计算',
+    interview: '面试人数按1:1.5确定。面试含个人基本情况介绍、转专业理由陈述、专业认知问答、大学生涯规划等，满分100分，<60分不予录取。',
+    extra: '2026年大幅扩招：2024级每个专业从5人增至15人。',
+    note2025: '2025年：2023级每专业5人，2024级每专业10人。高等数学成绩50%+面试50%。'
+  },
+  {
+    name: '网络空间安全与信息法学院',
+    conditions: '法学：2024/2025级理工类及文史类。信息安全/网安：仅理工类。',
+    formula: '总分=(绩点×25+科创加分)×50%+面试成绩×50%',
+    interview: '面试满分100分，≥60分及格。面试考查学习能力、专业发展潜力、组织与交流能力、创新与实践能力、团队协作等。',
+    extra: '科创加分按竞赛等级：国家级一等奖20分、二等奖15分、三等奖10分、省部级一等奖7分、二等奖5分、三等奖3分。',
+    note2025: '2025年：必修课加权平均成绩≥70分或排名前30%。'
+  },
+  {
+    name: '自动化学院',
+    conditions: '理工类专业学生。转入前应完成转入专业当前学期及之前培养方案规定应修全部课程。服兵役、少数民族或创业返校学生优先。',
+    formula: '采用必修课加权平均学分绩点计算。按不高于1:1.5比例确定面试名单。',
+    interview: '由学院转专业考核领导小组组织面试考核，根据面试成绩择优录取。',
+    extra: '这是所有学院中转入条件最特殊的之一——只接收工科专业。',
+    note2025: '2025年方案基本一致。'
+  },
+  {
+    name: '数学与统计学院',
+    conditions: '双学位项目：必修课均分≥80或排名前30%，无补考重修，大二CET4≥425。普通专业：排名前50%，无重修，大二CET4≥425。',
+    formula: '总分=(绩点×25+科创加分)×50%+面试成绩×50%',
+    interview: '面试考查学习动力、逻辑思维能力、观察与应变能力、自我管理能力、组织与交流能力、创新意识和创新能力、团队协作等。满分100分，不及格不予录取。',
+    extra: '竞赛获奖（互联网+、挑战杯、数学建模等省部级二等奖+且无重修）可不受成绩限制提出特别申请。',
+    note2025: '2025年方案采用"必修课加权平均成绩×50%+面试成绩×50%"。'
+  },
+  {
+    name: '传媒艺术学院',
+    conditions: '满足学校转专业管理办法基本条件。绩点≥2.0。无校通报批评或纪律处分。',
+    formula: '采用必修课平均学分绩点计算',
+    interview: '含心理测试和专业面试。心理测试不合格直接不予录取。专业面试含文学艺术常识、影视艺术常识及专业基础和综合素质。',
+    extra: '2024级录取4人，2025级录取10人。',
+    note2025: '仅广播电视编导专业接收转专业。'
+  },
+  {
+    name: '集成电路学院',
+    conditions: '绩点≥3.0。无补考重修，无违纪。大二学生四级未通过不得申请。只接收理工科。',
+    formula: '综合成绩=绩点×25×0.5+专业面试成绩×0.5',
+    interview: '面试人数按1:1.5确定。面试含个人基本情况介绍、转专业理由陈述、专业认知问答、大学生涯规划等。每名学生面试时间约15分钟。面试成绩<60分不予录取。',
+    extra: '2026年新成立的独立学院。非理工科不予受理。',
+    note2025: '2025年各专业分属光电学院和先进制造学院管理。'
+  },
+  {
+    name: '现代邮政学院',
+    conditions: '2024/2025级理工类生源。无补考重修。必修课绩点排名前50%。无违纪。',
+    formula: '考核成绩=绩点×25×60%+面试成绩×40%',
+    interview: '面试从思想表现、道德品质、政治态度、仪态仪表及语言表达、应用能力、逻辑分析能力、专业发展潜力、科研能力和水平、获奖情况等方面综合考核。面试不低于60分。',
+    extra: '转入申请数少于接收计划数且满足条件则全部录取。',
+    note2025: '2025年方案与2026年基本一致。'
+  }
+];
+
+// ── Admit stats for TAB 6 ──
+const admitData = [
+  { college: '通信与信息工程学院', count: 41, color: '#1a56db' },
+  { college: '光电工程学院/重庆国际半导体学院', count: 34, color: '#0d9488' },
+  { college: '软件工程学院', count: 30, color: '#7c3aed' },
+  { college: '自动化学院/工业互联网学院', count: 28, color: '#f59e0b' },
+  { college: '网络空间安全与信息法学院', count: 26, color: '#ef4444' },
+  { college: '计算机科学与技术学院/人工智能学院', count: 26, color: '#06b6d4' },
+  { college: '经济管理学院', count: 19, color: '#84cc16' },
+  { college: '先进制造工程学院', count: 14, color: '#f97316' },
+  { college: '理学院', count: 9, color: '#6366f1' },
+  { college: '生命健康信息科学与工程学院', count: 3, color: '#ec4899' },
+  { college: '现代邮政学院', count: 1, color: '#64748b' },
+];
+
+// ── Guide college analysis for TAB 5 ──
+const guideColleges = [
+  { name:'通信学院', heat:'⭐⭐⭐⭐⭐', diff:'较大', text:'重邮老牌强院，B+学科。热度极高，有80分报名门槛。招收计划较多，达到门槛即有极高转入几率。' },
+  { name:'计算机学院', heat:'⭐⭐⭐⭐⭐', diff:'异常难', text:'最热门学院，B+学科。计科竞争压力极大，复录比约1.5:1。软件工程复录比约1:1，较容易转入。2022年软件工程甚至没有面试，完全按均分排名录取。' },
+  { name:'人工智能学院', heat:'⭐⭐⭐⭐', diff:'较大', text:'大数据难度不输计科(复录比约2:1)；智科约1.5:1；人工智能连续两年报名人数未达招收计划，达门槛即可转入。' },
+  { name:'电子科学与工程学院', heat:'⭐⭐⭐', diff:'中等', text:'近两年热度水涨船高。75分门槛。电子科学与技术专业均分80以上较稳妥，其他专业难度较低。' },
+  { name:'集成电路学院', heat:'⭐⭐⭐', diff:'中等', text:'2026年独立成院。微电子/集成电路专业火爆，75分门槛，均分80以上较稳妥。机械类专业转入难度小。' },
+  { name:'自动化学院', heat:'⭐⭐⭐', diff:'中等偏低', text:'第三大院，工科实力不俗。只接收大一学过高数和大物的工科专业。复录比约1:1。经管/外语等学院无法转入。' },
+  { name:'网安学院', heat:'⭐⭐⭐', diff:'中等', text:'新热门，计算机学院外的不二选择。75分门槛。信息安全/网络空间安全专业。' },
+  { name:'数学与统计学院', heat:'⭐⭐', diff:'较低', text:'性价比高，转入难度不大。本科数学对考研计算机类很有帮助。2025年新增两个双学位项目。' },
+  { name:'软件工程学院', heat:'⭐⭐⭐', diff:'较低', text:'偏向就业。热度中等，复录比约1:1。接收计划多。2026年并入计算机学院统一管理。' },
+  { name:'经管学院', heat:'⭐⭐', diff:'容易(转入)', text:'转专业大户，大一上最卷的学院。大数据管理与应用、信管是转计算机未果的平替。注意：该院学生无法转入自动化学院。' },
+  { name:'现代邮政学院', heat:'⭐', diff:'低', text:'保研率高于校平均。转入简单，基本报名即进。邮政工程(工学)可转入自动化学院，电子商务(管理学)不可。' },
+  { name:'生物学院', heat:'⭐', diff:'较低', text:'生物医学工程发展势头迅猛。转入难度较低，2026年大幅扩招。该院可转入自动化学院。' },
+  { name:'外国语学院', heat:'⭐', diff:'较低', text:'调剂重灾区，课程简单无数学课→均分偏高。但转专业受限大，大部分转入法学等无数学要求的专业。无法转入自动化学院。' },
+  { name:'传媒/体育/国际学院', heat:'-', diff:'不可转', text:'高考招生时有特殊要求，不能申请转专业。' },
+];
+
+// ═══════════════════════════════════
+// FUNCTIONS
+// ═══════════════════════════════════
+
+// ── Tab switching ──
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+  const target = document.getElementById('tab-' + tabId);
+  if (target) target.classList.add('active');
+  const navBtns = document.querySelectorAll('.nav-tab');
+  navBtns.forEach(btn => {
+    if (btn.textContent.includes(getTabLabel(tabId))) btn.classList.add('active');
+  });
+  // Close mobile menu
+  document.getElementById('navTabs').classList.remove('show');
+  // Init charts on tab switch
+  if (tabId === 'yearly') { setTimeout(initYearCompareChart, 100); }
+  if (tabId === 'stats') { setTimeout(initStatsCharts, 100); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function getTabLabel(id) {
+  const map = { overview:'总则', colleges:'学院详情', yearly:'历年数据', policies:'考核方案', guide:'转专业攻略', stats:'数据统计', downloads:'实用下载' };
+  return map[id] || '';
+}
+
+function toggleMobileMenu() {
+  document.getElementById('navTabs').classList.toggle('show');
+}
+
+// ── Year switching ──
+function switchYear(yearId, e) {
+  document.querySelectorAll('.year-tab').forEach(el => el.classList.remove('active'));
+  (e || window.event).target.classList.add('active');
+  const data = yearlyData[yearId];
+  document.getElementById('yearTableTitle').textContent = data.title;
+  renderYearTable(data);
+}
+
+function renderYearTable(data) {
+  let html = '<p style="font-size:.85rem;color:var(--text-muted);margin-bottom:12px;">' + data.note + '</p>';
+  html += '<table class="data-table"><thead><tr><th>学院</th><th>专业</th><th>2021级/2023级<br>接收人数</th><th>2022级/2024级<br>接收人数</th><th>合计<br>(旧级)</th><th>合计<br>(新级)</th></tr></thead><tbody>';
+  data.rows.forEach(row => {
+    html += '<tr>';
+    row.forEach(cell => { html += '<td>' + cell + '</td>'; });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  document.getElementById('yearTableContainer').innerHTML = html;
+}
+
+// ── College sidebar and detail ──
+function buildCollegePage() {
+  const sidebar = document.getElementById('collegeSidebar');
+  const detail = document.getElementById('collegeDetail');
+  sidebar.innerHTML = colleges.map((c, i) =>
+    '<button class="college-sidebar-item' + (i === 0 ? ' active' : '') + '" onclick="showCollege(\'' + c.id + '\', this)">' + c.name + '</button>'
+  ).join('');
+  showCollege(colleges[0].id, sidebar.querySelector('button'));
+}
+
+function showCollege(id, btn) {
+  document.querySelectorAll('.college-sidebar-item').forEach(el => el.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const c = colleges.find(c => c.id === id);
+  if (!c) return;
+
+  const heatStars = '🔥'.repeat(c.heat) + (c.heat < 5 ? '❄️'.repeat(5 - c.heat) : '');
+  const diffClass = c.diffPct >= 80 ? 'hot' : c.diffPct >= 60 ? 'warm' : c.diffPct >= 35 ? 'cool' : 'easy';
+  const heatClass = c.heat >= 5 ? 'tag-hot' : c.heat >= 4 ? 'tag-warm' : c.heat >= 3 ? 'tag-cool' : 'tag-easy';
+
+  // Build quota tables with clear year-specific column headers
+  const yearLabels = {
+    '2023': { grades: ['2021级', '2022级'], note: '（2023年转专业面向2021级和2022级学生）' },
+    '2025': { grades: ['2023级', '2024级'], note: '（2025年转专业面向2023级和2024级学生）' },
+    '2026': { grades: ['2024级', '2025级'], note: '（2026年转专业面向2024级和2025级学生）' }
+  };
+  let quotaHtml = '';
+  for (const [year, majors] of Object.entries(c.quotas)) {
+    const labels = yearLabels[year] || { grades: ['高年级', '低年级'], note: '' };
+    quotaHtml += '<h4 style="margin-top:16px;margin-bottom:4px;">📅 ' + year + '年 <span style="font-weight:400;font-size:.85rem;color:var(--text-muted);">' + labels.note + '</span></h4>';
+    quotaHtml += '<table class="data-table"><thead><tr><th>专业</th><th>' + labels.grades[0] + '<br>接收人数</th><th>' + labels.grades[1] + '<br>接收人数</th></tr></thead><tbody>';
+    for (const [major, val] of Object.entries(majors)) {
+      let parts = String(val).split('/');
+      quotaHtml += '<tr><td>' + major + '</td><td class="num">' + (parts[0] || '-') + '</td><td class="num">' + (parts[1] || '-') + '</td></tr>';
+    }
+    quotaHtml += '</tbody></table>';
+  }
+
+  document.getElementById('collegeDetail').innerHTML = `
+    <div class="card">
+      <div class="card-header"><i class="fa-solid ${c.icon}"></i> ${c.name}</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+        <span class="tag ${heatClass}">热度 ${heatStars}</span>
+        <span class="tag tag-info">难度: ${c.diff}</span>
+        <span class="tag tag-warm">报名门槛: ${c.threshold}</span>
+      </div>
+      <div class="diff-bar"><div class="diff-bar-fill ${diffClass}" style="width:${c.diffPct}%"></div></div>
+      <p style="font-size:.85rem;color:var(--text-muted);margin-top:6px;">转入难度指数: ${c.diffPct}%</p>
+      <p style="margin-top:12px;">${c.summary}</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-table-list"></i> 历年接收人数计划</div>
+      ${quotaHtml}
+    </div>
+
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-clipboard-check"></i> 申请条件</div>
+      <p>${c.conditions}</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-calculator"></i> 成绩计算方式</div>
+      <div class="formula-box">${c.formula}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-note-sticky"></i> 补充说明</div>
+      <p style="font-size:.9rem;">${c.notes}</p>
+    </div>
+
+    <div class="card" style="border-left:4px solid var(--accent);">
+      <div class="card-header"><i class="fa-solid fa-lightbulb"></i> 攻略点评</div>
+      <p style="font-size:.9rem;color:var(--text-muted);font-style:italic;">💡 ${c.guide}</p>
+    </div>
+  `;
+}
+
+// ── Policy accordion ──
+function buildPolicyAccordion() {
+  document.getElementById('policyAccordion').innerHTML = policies.map((p, i) => `
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <span>🏛️ ${p.name}</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <div class="accordion-body">
+        <h4 style="color:var(--primary);">申请条件</h4>
+        <p style="margin-bottom:12px;">${p.conditions}</p>
+        <h4 style="color:var(--primary);">成绩计算公式</h4>
+        <div class="formula-box" style="margin-bottom:12px;">${p.formula}</div>
+        <h4 style="color:var(--primary);">面试考核</h4>
+        <p style="margin-bottom:12px;">${p.interview}</p>
+        <h4 style="color:var(--primary);">其他说明</h4>
+        <p style="margin-bottom:12px;">${p.extra}</p>
+        ${p.note2025 ? '<div class="alert alert-info"><strong>📌 2025年对比：</strong>' + p.note2025 + '</div>' : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleAccordion(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('show');
+}
+
+// ── Guide college analysis ──
+function buildGuideColleges() {
+  document.getElementById('guideCollegeAnalysis').innerHTML = `
+    <div class="card-header"><i class="fa-solid fa-building-columns"></i> 各学院转专业热度与难度分析</div>
+    <div style="overflow-x:auto;">
+      <table class="data-table">
+        <thead><tr><th>学院</th><th>热度</th><th>难度</th><th>分析</th></tr></thead>
+        <tbody>
+          ${guideColleges.map(g => `
+            <tr>
+              <td><strong>${g.name}</strong></td>
+              <td>${g.heat}</td>
+              <td><span class="tag ${g.diff==='异常难'?'tag-hot':g.diff==='较大'?'tag-warm':g.diff==='中等'||g.diff==='中等偏低'?'tag-cool':'tag-easy'}">${g.diff}</span></td>
+              <td style="font-size:.85rem;">${g.text}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+// ── Admit stats table ──
+function buildAdmitStats() {
+  document.getElementById('admitStatsTable').innerHTML = `
+    <table class="data-table">
+      <thead><tr><th>学院</th><th>预录取人数</th><th>占比</th><th>比例条</th></tr></thead>
+      <tbody>
+        ${admitData.map(a => {
+          const pct = (a.count / 233 * 100).toFixed(1);
+          return `<tr>
+            <td>${a.college}</td>
+            <td class="num">${a.count}</td>
+            <td class="num">${pct}%</td>
+            <td><div class="diff-bar"><div class="diff-bar-fill cool" style="width:${pct*3}%;background:${a.color}"></div></div></td>
+          </tr>`;
+        }).join('')}
+        <tr style="font-weight:700;background:#f8fafc;">
+          <td>合计</td><td class="num">233</td><td class="num">100%</td><td></td>
+        </tr>
+      </tbody>
+    </table>
+  `;
+}
+
+// ── Charts ──
+let yearCompareChart = null, admitPieChart = null, admitBarChart = null;
+
+function initYearCompareChart() {
+  if (typeof Chart === 'undefined') return;
+  try {
+  if (yearCompareChart) yearCompareChart.destroy();
+  const ctx = document.getElementById('yearCompareChart');
+  if (!ctx || !ctx.getContext) return;
+  // Compare total quotas by college across years
+  const totals = {
+    '2023': { '通信':53, '光电/电子':40, '计算机':48, '经管':80, '邮政':13, '外语':20, '生物':30, '网安':16, '自动化':46, '理学':30, '先进制造':32, '软件':30 },
+    '2025': { '通信':72, '光电/电子':50, '计算机':28, '经管':80, '邮政':14, '外语':20, '生物':30, '网安':34, '自动化':53, '理学':60, '先进制造':30, '软件':30 },
+    '2026': { '通信':20, '电子科学':39, '计算机(含软件)':12, '经管':80, '邮政':14, '外语':20, '生物':30, '网安':30, '自动化':31, '数学':30, '集成':30, '人工智能':24, '传媒':10 },
+  };
+  // Simplified: compare some key colleges
+  const labels = ['通信', '计算机类', '电子/光电', '经管', '自动化', '理学/数学', '网安', '生物'];
+  const y2023 = [53, 78, 40, 80, 46, 30, 16, 30];
+  const y2025 = [72, 58, 50, 80, 53, 60, 34, 30];
+  const y2026 = [20, 36, 69, 80, 31, 30, 30, 30];
+
+  yearCompareChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: '2023年', data: y2023, backgroundColor: '#93c5fd', borderColor: '#3b82f6', borderWidth: 1 },
+        { label: '2025年', data: y2025, backgroundColor: '#6ee7b7', borderColor: '#10b981', borderWidth: 1 },
+        { label: '2026年', data: y2026, backgroundColor: '#fca5a5', borderColor: '#ef4444', borderWidth: 1 },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: '主要学院历年接收总人数对比', font: { size: 14 } },
+        legend: { position: 'bottom' }
+      },
+      scales: {
+        y: { beginAtZero: true, title: { display: true, text: '接收人数' } }
+      }
+    }
+  });
+  } catch(e) { console.warn('Year chart init failed:', e); }
+}
+
+function initStatsCharts() {
+  // Check if Chart.js loaded
+  if (typeof Chart === 'undefined') {
+    // Fallback: show data as HTML
+    document.querySelectorAll('.chart-wrap').forEach(el => {
+      el.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px;">📊 图表组件加载中...请检查网络连接后刷新页面<br><small>（需要 Chart.js CDN）</small></p>';
+    });
+    return;
+  }
+
+  try {
+  // Pie chart
+  if (admitPieChart) admitPieChart.destroy();
+  const pieCtx = document.getElementById('admitPieChart');
+  if (pieCtx && pieCtx.getContext) {
+    admitPieChart = new Chart(pieCtx, {
+      type: 'doughnut',
+      data: {
+        labels: admitData.map(d => d.college),
+        datasets: [{ data: admitData.map(d => d.count), backgroundColor: admitData.map(d => d.color), borderWidth: 1 }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          title: { display: true, text: '2024-2025学年转专业预录取233人分布', font: { size: 13 } },
+          legend: { position: 'bottom', labels: { font: { size: 10 }, padding: 8 } }
+        }
+      }
+    });
+  }
+
+  // Bar chart
+  if (admitBarChart) admitBarChart.destroy();
+  const barCtx = document.getElementById('admitBarChart');
+  if (barCtx && barCtx.getContext) {
+    admitBarChart = new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: admitData.map(d => d.college),
+        datasets: [{ label: '预录取人数', data: admitData.map(d => d.count), backgroundColor: admitData.map(d => d.color), borderRadius: 6 }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          title: { display: true, text: '各学院预录取人数排名', font: { size: 13 } },
+          legend: { display: false }
+        },
+        scales: { x: { beginAtZero: true, title: { display: true, text: '人数' } } }
+      }
+    });
+  }
+  } catch(e) {
+    console.warn('Chart.js init failed:', e);
+  }
+}
+
+// ── Init ──
+function init() {
+  buildCollegePage();
+  buildPolicyAccordion();
+  buildGuideColleges();
+  buildAdmitStats();
+  renderYearTable(yearlyData['y2023']);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
