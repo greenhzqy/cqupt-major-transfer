@@ -315,6 +315,30 @@ body {
 .contact-item i { font-size: 1.2rem; color: var(--primary); width: 24px; text-align: center; }
 .contact-item .contact-val { font-weight: 600; color: var(--text); }
 
+
+/* ── QR code card ── */
+.qr-card-body { text-align: center; padding: 8px 0; }
+.qr-card-body img {
+  width: 240px; height: 240px;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.qr-card-body p { margin-top: 10px; font-size: .9rem; color: var(--text-muted); }
+.qr-card-body p i { color: #ff0050; margin-right: 4px; }
+
+
+/* ── QR code card ── */
+.qr-card-body { text-align: center; padding: 8px 0; }
+.qr-card-body img {
+  width: 240px; height: 240px;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.qr-card-body p { margin-top: 10px; font-size: .9rem; color: var(--text-muted); }
+.qr-card-body p i { color: #ff0050; margin-right: 4px; }
+
 </style>
 </head>
 <body>
@@ -691,31 +715,30 @@ body {
   </div>
 
   <div class="card">
+    <div class="card-header">
+    <div class="card-header"><i class="fa-brands fa-tiktok"></i> 抖音关注</div>
+    <div class="qr-card-body">
+      <img src="douyin-qrcode.png" alt="抖音二维码">
+      <p><i class="fa-brands fa-tiktok"></i> 抖音扫码或搜索 <strong>892202495</strong> · 绿色的氢原子</p>
+      <p style="font-size:.85rem;">转专业、学业规划、校园生活……知无不言，欢迎来聊。</p>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-header"><i class="fa-solid fa-address-book"></i> 联系方式</div>
     <div class="contact-item">
       <i class="fa-brands fa-tiktok"></i>
       <span>抖音号：</span>
       <span class="contact-val">892202495</span>
-      <span style="color:var(--text-muted);font-size:.85rem;">（绿色的氢原子）</span>
     </div>
     <div class="contact-item">
       <i class="fa-solid fa-globe"></i>
       <span>全网昵称：</span>
       <span class="contact-val">绿色的氢原子</span>
     </div>
-    <div class="contact-item" style="padding-top:16px;">
-      <i class="fa-solid fa-comment-dots"></i>
-      <span style="color:var(--text-muted);font-size:.9rem;">如果你正在纠结转专业、不清楚大学发展方向，都可以来抖音找我交流，知无不言。</span>
-    </div>
-    <div style="text-align:center;padding:16px 0 8px;">
-      <img src="douyin-qrcode.png" alt="抖音二维码" style="width:180px;height:180px;border-radius:var(--radius);border:2px solid var(--border);">
-      <p style="font-size:.8rem;color:var(--text-muted);margin-top:8px;">扫码关注抖音 · 绿色的氢原子</p>
-    </div>
   </div>
 </div>
 
-
-</main>
 
 <footer style="text-align:center;padding:24px;color:var(--text-muted);font-size:.82rem;border-top:1px solid var(--border);max-width:1400px;margin:0 auto;">
   <p>📘 重邮转专业知识库 — 由 <strong style="color:var(--primary);">绿色的氢原子</strong> 整理制作</p>
