@@ -339,6 +339,42 @@ body {
 .qr-card-body p { margin-top: 10px; font-size: .9rem; color: var(--text-muted); }
 .qr-card-body p i { color: #ff0050; margin-right: 4px; }
 
+
+/* ── Two-column contact + QR ── */
+.contact-row {
+  display: flex; align-items: center; gap: 32px;
+  flex-wrap: wrap;
+}
+.contact-left { flex: 0 0 auto; min-width: 200px; }
+.contact-right { flex: 1; text-align: center; min-width: 200px; }
+.contact-right img {
+  width: 280px; height: 280px;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow);
+}
+@media (max-width: 600px) {
+  .contact-right img { width: 200px; height: 200px; }
+}
+
+
+/* ── Two-column contact + QR ── */
+.contact-row {
+  display: flex; align-items: center; gap: 32px;
+  flex-wrap: wrap;
+}
+.contact-left { flex: 0 0 auto; min-width: 200px; }
+.contact-right { flex: 1; text-align: center; min-width: 200px; }
+.contact-right img {
+  width: 280px; height: 280px;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow);
+}
+@media (max-width: 600px) {
+  .contact-right img { width: 200px; height: 200px; }
+}
+
 </style>
 </head>
 <body>
@@ -715,29 +751,32 @@ body {
   </div>
 
   <div class="card">
-    <div class="card-header">
-    <div class="card-header"><i class="fa-brands fa-tiktok"></i> 抖音关注</div>
-    <div class="qr-card-body">
-      <img src="douyin-qrcode.png" alt="抖音二维码">
-      <p><i class="fa-brands fa-tiktok"></i> 抖音扫码或搜索 <strong>892202495</strong> · 绿色的氢原子</p>
-      <p style="font-size:.85rem;">转专业、学业规划、校园生活……知无不言，欢迎来聊。</p>
-    </div>
-  </div>
-
-  <div class="card">
     <div class="card-header"><i class="fa-solid fa-address-book"></i> 联系方式</div>
-    <div class="contact-item">
-      <i class="fa-brands fa-tiktok"></i>
-      <span>抖音号：</span>
-      <span class="contact-val">892202495</span>
-    </div>
-    <div class="contact-item">
-      <i class="fa-solid fa-globe"></i>
-      <span>全网昵称：</span>
-      <span class="contact-val">绿色的氢原子</span>
+    <div class="contact-row">
+      <div class="contact-left">
+        <div class="contact-item">
+          <i class="fa-brands fa-tiktok"></i>
+          <span>抖音号：</span>
+          <span class="contact-val">892202495</span>
+        </div>
+        <div class="contact-item">
+          <i class="fa-solid fa-globe"></i>
+          <span>全网昵称：</span>
+          <span class="contact-val">绿色的氢原子</span>
+        </div>
+        <div style="padding:12px 0 0 36px;color:var(--text-muted);font-size:.88rem;line-height:1.7;">
+          转专业、学业规划、校园生活……<br>知无不言，欢迎来聊。
+        </div>
+      </div>
+      <div class="contact-right">
+        <img src="douyin-qrcode.png" alt="抖音二维码">
+        <p style="margin-top:8px;font-size:.85rem;color:var(--text-muted);">扫码关注抖音 · 绿色的氢原子</p>
+      </div>
     </div>
   </div>
 </div>
+
+
 
 
 <footer style="text-align:center;padding:24px;color:var(--text-muted);font-size:.82rem;border-top:1px solid var(--border);max-width:1400px;margin:0 auto;">
