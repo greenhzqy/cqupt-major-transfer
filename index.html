@@ -283,6 +283,35 @@ body {
   .data-table th, .data-table td { padding: 6px 8px; }
   .navbar-inner { padding: 0; }
 }
+
+/* ── 站长介绍 ── */
+.about-header {
+  display: flex; align-items: center; gap: 24px;
+  margin-bottom: 20px; flex-wrap: wrap;
+}
+.about-qrcode {
+  width: 130px; height: 130px; border-radius: 50%;
+  object-fit: cover; border: 3px solid var(--primary-light);
+  flex-shrink: 0;
+}
+.about-info { flex: 1; min-width: 220px; }
+.about-info h3 { font-size: 1.25rem; margin-bottom: 2px; }
+.about-info .about-role { font-size: .9rem; color: var(--text-muted); margin-bottom: 8px; }
+.about-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.about-bio {
+  font-size: .9rem; color: var(--text-muted); line-height: 1.9;
+  margin-top: 12px;
+}
+.about-bio p { margin-bottom: 10px; }
+.contact-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0; font-size: .95rem;
+  border-bottom: 1px solid var(--border);
+}
+.contact-item:last-child { border-bottom: none; }
+.contact-item i { font-size: 1.2rem; color: var(--primary); width: 24px; text-align: center; }
+.contact-item .contact-val { font-weight: 600; color: var(--text); }
+
 </style>
 </head>
 <body>
@@ -305,6 +334,7 @@ body {
       <button class="nav-tab" onclick="switchTab('guide')"><i class="fa-solid fa-book"></i> 转专业攻略</button>
       <button class="nav-tab" onclick="switchTab('stats')"><i class="fa-solid fa-chart-pie"></i> 数据统计</button>
       <button class="nav-tab" onclick="switchTab('downloads')"><i class="fa-solid fa-download"></i> 实用下载</button>
+	      <button class="nav-tab" onclick="switchTab('about')"><i class="fa-solid fa-user"></i> 关于站长</button>
     </div>
   </div>
 </nav>
@@ -629,6 +659,54 @@ body {
     </p>
   </div>
 </div>
+
+
+<!-- ── TAB 8: 关于站长 ── -->
+<div class="tab-content" id="tab-about">
+  <div class="card">
+    <div class="card-header"><i class="fa-solid fa-user"></i> 站长介绍</div>
+    <div class="about-header">
+      <img class="about-qrcode" src="douyin-qrcode.png" alt="抖音二维码">
+      <div class="about-info">
+        <h3>绿色的氢原子</h3>
+        <div class="about-role">重邮在读学长 · 原邮政工程 → 智能车辆工程</div>
+        <div class="about-tags">
+          <span class="tag tag-hot">转专业亲历者</span>
+          <span class="tag tag-warm">抖音校园博主</span>
+          <span class="tag tag-cool">信息整理</span>
+          <span class="tag tag-info">校园干货分享</span>
+        </div>
+      </div>
+    </div>
+    <div class="about-bio">
+      <p>我完整经历过重邮跨大类转专业全过程：大一从<strong>邮政工程</strong>，通过考核成功转入<strong>智能车辆工程</strong>。当年踩遍信息差的亏——通知零散、往届经验碎片化、不清楚考核核心标准，走了很多弯路。</p>
+      <p>同时我运营校园学长抖音账号，持续输出重邮志愿、大一压力、学业规划干货，累计接待大量新生咨询，发现绝大多数同学对转专业一无所知，网上流传的版本真假混杂，很难分辨。</p>
+      <p>凭借极强的信息搜集能力，我整理教务处官方文件、往届上岸学长一手经验、笔试面试完整备考思路，搭建这座<strong>专门服务重邮学生的转专业信息站</strong>。</p>
+      <p>站内内容全部依托官方政策与个人真实经历，不编造、不夸大，清晰拆解转专业门槛、绩点要求、时间节点、备考重点，解决大家最核心的信息差难题。</p>
+      <p>除转专业内容外，我也会分享四级备考、实验室竞选、竞赛、校园生活、升学选择等干货；熟练剪辑、AI 文案辅助、手工电路创作，擅长把复杂校园规则简化成易懂内容。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><i class="fa-solid fa-address-book"></i> 联系方式</div>
+    <div class="contact-item">
+      <i class="fa-brands fa-tiktok"></i>
+      <span>抖音号：</span>
+      <span class="contact-val">892202495</span>
+      <span style="color:var(--text-muted);font-size:.85rem;">（绿色的氢原子）</span>
+    </div>
+    <div class="contact-item">
+      <i class="fa-solid fa-globe"></i>
+      <span>全网昵称：</span>
+      <span class="contact-val">绿色的氢原子</span>
+    </div>
+    <div class="contact-item" style="padding-top:16px;">
+      <i class="fa-solid fa-comment-dots"></i>
+      <span style="color:var(--text-muted);font-size:.9rem;">如果你正在纠结转专业、不清楚大学发展方向，都可以来抖音找我交流，知无不言。</span>
+    </div>
+  </div>
+</div>
+
 
 </main>
 
@@ -1165,7 +1243,7 @@ function switchTab(tabId) {
 }
 
 function getTabLabel(id) {
-  const map = { overview:'总则', colleges:'学院详情', yearly:'历年数据', policies:'考核方案', guide:'转专业攻略', stats:'数据统计', downloads:'实用下载' };
+  const map = { overview:'总则', colleges:'学院详情', yearly:'历年数据', policies:'考核方案', guide:'转专业攻略', stats:'数据统计', downloads:'实用下载', about:'关于站长' };
   return map[id] || '';
 }
 
