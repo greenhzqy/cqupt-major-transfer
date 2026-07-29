@@ -289,10 +289,13 @@ body {
   display: flex; align-items: center; gap: 24px;
   margin-bottom: 20px; flex-wrap: wrap;
 }
-.about-qrcode {
+.about-avatar {
   width: 130px; height: 130px; border-radius: 50%;
-  object-fit: cover; border: 3px solid var(--primary-light);
-  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff; font-size: 3.2rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; user-select: none;
+  box-shadow: 0 4px 12px rgba(26,86,219,.3);
 }
 .about-info { flex: 1; min-width: 220px; }
 .about-info h3 { font-size: 1.25rem; margin-bottom: 2px; }
@@ -666,7 +669,7 @@ body {
   <div class="card">
     <div class="card-header"><i class="fa-solid fa-user"></i> 站长介绍</div>
     <div class="about-header">
-      <img class="about-qrcode" src="douyin-qrcode.png" alt="抖音二维码">
+      <div class="about-avatar">绿</div>
       <div class="about-info">
         <h3>绿色的氢原子</h3>
         <div class="about-role">重邮在读学长 · 原邮政工程 → 智能车辆工程</div>
