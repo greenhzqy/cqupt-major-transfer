@@ -4,6 +4,12 @@
 *.xlsx
 *.pdf
 *.rar
+# 但 downloads 目录下的文件需要上传到 Gitee Pages 供用户下载
+!downloads/**/*.docx
+!downloads/**/*.doc
+!downloads/**/*.xlsx
+!downloads/**/*.pdf
+!downloads/**/*.rar
 extracted/
 
 # 系统文件
