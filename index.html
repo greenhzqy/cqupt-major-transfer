@@ -392,6 +392,7 @@ body {
       <button class="nav-tab" onclick="switchTab('stats')"><i class="fa-solid fa-chart-pie"></i> 数据统计</button>
       <button class="nav-tab" onclick="switchTab('downloads')"><i class="fa-solid fa-download"></i> 实用下载</button>
 	      <button class="nav-tab" onclick="switchTab('about')"><i class="fa-solid fa-user"></i> 关于站长</button>
+		      <button class="nav-tab" onclick="switchTab('links')"><i class="fa-solid fa-link"></i> 常用链接</button>
     </div>
   </div>
 </nav>
@@ -770,7 +771,46 @@ body {
   </div>
 </div>
 
+<!-- ── TAB 9: 常用链接 ── -->
+<div class="tab-content" id="tab-links">
+  <div class="alert alert-info">
+    <strong><i class="fa-solid fa-circle-info"></i> 温馨提示：</strong>教务在线等校内网站需连接<strong>校园网</strong>或通过 <strong>VPN</strong> 才能访问。校外访问请先连接 VPN（vpn.cqupt.edu.cn）。
+  </div>
 
+  <div class="card">
+    <div class="card-header"><i class="fa-solid fa-link"></i> 常用链接</div>
+    <div class="grid-3">
+
+      <a class="dl-card" href="https://www.cqupt.edu.cn/" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+        <i class="fa-solid fa-building-columns"></i>
+        <div class="dl-info">
+          <h4>学校官网</h4>
+          <p>重庆邮电大学官方网站</p>
+        </div>
+        <i class="fa-solid fa-arrow-up-right-from-square" style="color:var(--text-muted);font-size:.85rem;"></i>
+      </a>
+
+      <a class="dl-card" href="https://jw.cqupt.edu.cn/" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+        <i class="fa-solid fa-calendar-check"></i>
+        <div class="dl-info">
+          <h4>教务在线</h4>
+          <p>选课、成绩查询、考试安排（需校园网/VPN）</p>
+        </div>
+        <i class="fa-solid fa-arrow-up-right-from-square" style="color:var(--text-muted);font-size:.85rem;"></i>
+      </a>
+
+      <a class="dl-card" href="https://v.douyin.com/aP6j5SydZhA/" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+        <i class="fa-brands fa-tiktok"></i>
+        <div class="dl-info">
+          <h4>抖音主页</h4>
+          <p>绿色的氢原子 · 校园干货分享</p>
+        </div>
+        <i class="fa-solid fa-arrow-up-right-from-square" style="color:var(--text-muted);font-size:.85rem;"></i>
+      </a>
+
+    </div>
+  </div>
+</div>
 
 
 <footer style="text-align:center;padding:24px;color:var(--text-muted);font-size:.82rem;border-top:1px solid var(--border);max-width:1400px;margin:0 auto;">
@@ -1306,7 +1346,7 @@ function switchTab(tabId) {
 }
 
 function getTabLabel(id) {
-  const map = { overview:'总则', colleges:'学院详情', yearly:'历年数据', policies:'考核方案', guide:'转专业攻略', stats:'数据统计', downloads:'实用下载', about:'关于站长' };
+  const map = { overview:'总则', colleges:'学院详情', yearly:'历年数据', policies:'考核方案', guide:'转专业攻略', stats:'数据统计', downloads:'实用下载', about:'关于站长', links:'常用链接' };
   return map[id] || '';
 }
 
