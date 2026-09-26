@@ -25,3 +25,6 @@ desktop.ini
 # 临时文件
 *.tmp
 *.log
+
+# AI 工具配置（本地技能缓存，不入库）
+.claude/
